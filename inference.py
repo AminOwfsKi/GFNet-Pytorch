@@ -68,22 +68,24 @@ def main():
         # create model
         if 'resnet' in model_arch:
             model = resnet.resnet50(pretrained=False)
-            model_prime = resnet.resnet50(pretrained=False)            
+            model_prime = resnet.resnet50(pretrained=False)
+            model.fc = nn.Linear(2048, 3, bias=True)
+            model_prime.fc = nn.Linear(2048, 3, bias=True)
 
         elif 'densenet' in model_arch:
             model = eval('densenet.' + model_arch)(pretrained=False)
             model_prime = eval('densenet.' + model_arch)(pretrained=False)
 
         elif 'efficientnet' in model_arch:
-            model = create_model(model_arch, pretrained=False, num_classes=1000,
+            model = create_model(model_arch, pretrained=False, num_classes=3,
                                     drop_rate=0.3, drop_connect_rate=0.2)
-            model_prime = create_model(model_arch, pretrained=False, num_classes=1000,
+            model_prime = create_model(model_arch, pretrained=False, num_classes=3,
                                     drop_rate=0.3, drop_connect_rate=0.2)
         
         elif 'mobilenetv3' in model_arch:
-            model = create_model(model_arch, pretrained=False, num_classes=1000,
+            model = create_model(model_arch, pretrained=False, num_classes=3,
                                     drop_rate=0.2, drop_connect_rate=0.2)
-            model_prime = create_model(model_arch, pretrained=False, num_classes=1000,
+            model_prime = create_model(model_arch, pretrained=False, num_classes=3,
                                     drop_rate=0.2, drop_connect_rate=0.2)
         
         elif 'regnet' in model_arch:
@@ -107,7 +109,7 @@ def main():
                 transforms.ToTensor(),
                 normalize ]))
         train_set_index = torch.randperm(len(train_set))
-        train_loader = torch.utils.data.DataLoader(train_set, batch_size=256, num_workers=32, pin_memory=False,
+        train_loader = torch.utils.data.DataLoader(train_set, batch_size=64, num_workers=32, pin_memory=False,
                 sampler=torch.utils.data.sampler.SubsetRandomSampler(train_set_index[-200000:]))
 
         val_loader = torch.utils.data.DataLoader(
@@ -116,7 +118,7 @@ def main():
                 transforms.CenterCrop(model_configuration['image_size']),
                 transforms.ToTensor(),
                 normalize])),
-            batch_size=256, shuffle=False, num_workers=16, pin_memory=False)
+            batch_size=64, shuffle=False, num_workers=16, pin_memory=False)
 
         state_dim = model_configuration['feature_map_channels'] * math.ceil(patch_size/32) * math.ceil(patch_size/32)
         
@@ -185,7 +187,7 @@ def generate_logits(model_prime, model, fc, memory, policy, dataloader, maximum_
 
     for i, (x, target) in enumerate(dataloader):
 
-        logits_temp = torch.zeros(maximum_length, x.size(0), 1000)
+        logits_temp = torch.zeros(maximum_length, x.size(0), 3)
 
         target_var = target.cuda()
         input_var = x.cuda()

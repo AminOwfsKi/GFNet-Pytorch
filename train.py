@@ -85,21 +85,23 @@ def main():
         model_arch = 'resnet'
         model = resnet.resnet50(pretrained=False)
         model_prime = resnet.resnet50(pretrained=False)
+        model.fc = nn.Linear(2048, 3, bias=True)
+        model_prime.fc = nn.Linear(2048, 3, bias=True)
     elif 'densenet' in args.model_arch:
         model_arch = 'densenet'
         model = eval('densenet.' + args.model_arch)(pretrained=False)
         model_prime = eval('densenet.' + args.model_arch)(pretrained=False)
     elif 'efficientnet' in args.model_arch:
         model_arch = 'efficientnet'
-        model = create_model(args.model_arch, pretrained=False, num_classes=1000,
+        model = create_model(args.model_arch, pretrained=False, num_classes=3,
                              drop_rate=0.3, drop_connect_rate=0.2)
-        model_prime = create_model(args.model_arch, pretrained=False, num_classes=1000,
+        model_prime = create_model(args.model_arch, pretrained=False, num_classes=3,
                                    drop_rate=0.3, drop_connect_rate=0.2)
     elif 'mobilenetv3' in args.model_arch:
         model_arch = 'mobilenetv3'
-        model = create_model(args.model_arch, pretrained=False, num_classes=1000,
+        model = create_model(args.model_arch, pretrained=False, num_classes=3,
                              drop_rate=0.2, drop_connect_rate=0.2)
-        model_prime = create_model(args.model_arch, pretrained=False, num_classes=1000,
+        model_prime = create_model(args.model_arch, pretrained=False, num_classes=3,
                                    drop_rate=0.2, drop_connect_rate=0.2)
     elif 'regnet' in args.model_arch:
         model_arch = 'regnet'
@@ -117,6 +119,8 @@ def main():
     if args.train_stage == 1:
         model.load_state_dict(torch.load(args.model_path))
         model_prime.load_state_dict(torch.load(args.model_prime_path))
+        model.fc = nn.Linear(2048, 3, bias=True)
+        model_prime.fc = nn.Linear(2048, 3, bias=True)
     else:
         checkpoint = torch.load(args.checkpoint_path)
         model.load_state_dict(checkpoint['model_state_dict'])
@@ -162,7 +166,7 @@ def main():
         normalize,
     ]))
     train_set_index = torch.randperm(len(train_set))
-    train_loader = torch.utils.data.DataLoader(train_set, batch_size=256, num_workers=32, pin_memory=False,
+    train_loader = torch.utils.data.DataLoader(train_set, batch_size=64, num_workers=32, pin_memory=False,
                                                sampler=torch.utils.data.sampler.SubsetRandomSampler(
                                                    train_set_index[:]))
 

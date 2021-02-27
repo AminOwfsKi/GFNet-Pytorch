@@ -184,7 +184,7 @@ class PPO:
 
 
 class Full_layer(torch.nn.Module):
-    def __init__(self, feature_num, hidden_state_dim=1024, fc_rnn=True, class_num=1000):
+    def __init__(self, feature_num, hidden_state_dim=1024, fc_rnn=True, class_num=3):
         super(Full_layer, self).__init__()
         self.class_num = class_num
         self.feature_num = feature_num

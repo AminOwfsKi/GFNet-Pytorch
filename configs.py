@@ -147,7 +147,7 @@ train_configurations = {
         'weight_decay': 1e-4,
         'momentum': 0.9,
         'Nesterov': True,
-        'batch_size': 256,
+        'batch_size': 64,
         'dsn_ratio': 1,
         'epoch_num': 60,
         'train_model_prime': True
@@ -159,7 +159,7 @@ train_configurations = {
         'weight_decay': 1e-4,
         'momentum': 0.9,
         'Nesterov': True,
-        'batch_size': 256,
+        'batch_size': 50,
         'dsn_ratio': 1,
         'epoch_num': 60,
         'train_model_prime': True
@@ -171,7 +171,7 @@ train_configurations = {
         'weight_decay': 1e-4,
         'momentum': 0.9,
         'Nesterov': True,
-        'batch_size': 256,
+        'batch_size': 50,
         'dsn_ratio': 5,
         'epoch_num': 30,
         'train_model_prime': False
@@ -183,7 +183,7 @@ train_configurations = {
         'weight_decay': 1e-4,
         'momentum': 0.9,
         'Nesterov': True,
-        'batch_size': 256,
+        'batch_size': 50,
         'dsn_ratio': 5,
         'epoch_num': 90,
         'train_model_prime': False
@@ -195,7 +195,7 @@ train_configurations = {
         'weight_decay': 5e-5,
         'momentum': 0.9,
         'Nesterov': True,
-        'batch_size': 256,
+        'batch_size': 50,
         'dsn_ratio': 1,
         'epoch_num': 60,
         'train_model_prime': True
